@@ -77,6 +77,18 @@ max_kind() {
   fi
 }
 
+static_go_patch_only() {
+  git -C "$ROOT_DIR" diff --cached -- http/static.go | awk '
+    /^[+-][^+-]/ {
+      line=$0
+      if (line ~ /manifest|themeColor|theme_color|favicon|apple-touch-icon|android-chrome|img\/icons|Cache-Control|no-store/) next
+      if (line ~ /^[+-][[:space:]]*$/) next
+      bad=1
+    }
+    END { exit bad }
+  '
+}
+
 detect_release_kind() {
   case "$UNYCLOUD_GIT_RELEASE_KIND" in
     fix|minor|major) printf '%s\n' "$UNYCLOUD_GIT_RELEASE_KIND"; return 0 ;;
@@ -100,6 +112,13 @@ detect_release_kind() {
     case "$status" in R*|C*) path=${3:-$path} ;; esac
 
     case "$path" in
+      http/static.go)
+        if static_go_patch_only; then
+          kind=$(max_kind "$kind" fix)
+        else
+          kind=$(max_kind "$kind" minor)
+        fi
+        ;;
       go.mod|go.sum|frontend/pnpm-lock.yaml|frontend/package.json|cmd/*|http/*|auth/*|users/*|storage/*)
         kind=$(max_kind "$kind" minor)
         ;;
