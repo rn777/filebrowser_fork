@@ -19,6 +19,17 @@ jobs:
         with:
           go-version: '1.24'
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
       - name: Build for ARM64
         run: |
           GOOS=linux GOARCH=arm64 go build -o dist/unycloud-arm64 .
