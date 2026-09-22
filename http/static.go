@@ -131,7 +131,7 @@ func runtimeThemeColors(theme string) (themeColor, backgroundColor string) {
 		return "#151329", "#0f1117"
 	}
 
-	return "#3e3aab", "#ffffff"
+	return "#5a52c8", "#ffffff"
 }
 
 func getStaticHandlers(store *storage.Storage, server *settings.Server, assetsFs fs.FS) (index, static http.Handler) {

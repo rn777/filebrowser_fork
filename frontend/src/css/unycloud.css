@@ -785,9 +785,6 @@ p.credits > span:nth-child(2n) {
 }
 
 :root.dark header {
-    background:
-        url(/static/img/unycloud/unycloud-white-logo.png) 0.5rem / 2.33rem no-repeat,
-        linear-gradient(90deg, #05060a 0%, #070914 68%, #11142a 100%) !important;
     border-bottom: 1px solid rgb(255 255 255 / 8%);
     box-shadow: 0 10px 34px rgb(0 0 0 / 36%);
 }

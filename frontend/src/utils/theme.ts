@@ -1,7 +1,7 @@
 import { theme } from "./constants";
 
 const themeStorageKey = "unycloudTheme";
-const lightThemeColor = "#3e3aab";
+const lightThemeColor = "#5a52c8";
 const darkThemeColor = "#151329";
 
 const isUserTheme = (value: string | null): value is UserTheme => {
