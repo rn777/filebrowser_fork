@@ -305,7 +305,7 @@ nav .action i:hover {
 }
 
 nav > .action:first-child {
-    padding: 1rem 0.85rem 0.5rem;
+    padding: 1rem .55rem .5rem;
 }
 
 nav > .action:first-child i {
