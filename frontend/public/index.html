@@ -41,6 +41,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="color-scheme" content="light dark" />
     <script src="[{[ .StaticURL ]}]/pwa-install.js"></script>
 
     <!-- Add to home screen for Android and modern mobile browsers -->
@@ -50,10 +51,9 @@
       href="[{[ .StaticURL ]}]/manifest.json"
       crossorigin="use-credentials"
     />
-    <meta
-      name="theme-color"
-      content="#5a52c8"
-    />
+    <meta name="theme-color" content="[{[ .ThemeColor ]}]" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#3e3aab" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151329" />
 
     <link rel="stylesheet" href="[{[ .StaticURL ]}]/loading.css" />
     <script src="[{[ .StaticURL ]}]/runtime.js"></script>
