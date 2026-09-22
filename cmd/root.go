@@ -446,7 +446,9 @@ func quickSetup(v *viper.Viper, s *storage.Storage) error {
 			},
 		},
 		AuthMethod: "",
-		Branding:   settings.Branding{},
+		Branding: settings.Branding{
+			Theme: "dark",
+		},
 		Tus: settings.Tus{
 			ChunkSize:  settings.DefaultTusChunkSize,
 			RetryCount: settings.DefaultTusRetryCount,

@@ -15,7 +15,7 @@ window.FileBrowser = {
   ResizePreview: true,
   Signup: false,
   StaticURL: "",
-  Theme: "",
+  Theme: "dark",
   TusSettings: { chunkSize: 10485760, retryCount: 5 },
   Version: "(untracked)",
 };
