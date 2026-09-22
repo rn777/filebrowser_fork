@@ -1,6 +1,8 @@
 import { theme } from "./constants";
 
 const themeStorageKey = "unycloudTheme";
+const lightThemeColor = "#3e3aab";
+const darkThemeColor = "#151329";
 
 const isUserTheme = (value: string | null): value is UserTheme => {
   return value === "light" || value === "dark" || value === "";
@@ -23,6 +25,8 @@ export const setTheme = (theme: UserTheme, persist = false) => {
   } else {
     html.className = theme;
   }
+
+  setThemeMetaColor(html.className as UserTheme);
 
   if (persist) {
     window.localStorage.setItem(themeStorageKey, html.className);
@@ -47,4 +51,14 @@ export const getMediaPreference = (): UserTheme => {
   } else {
     return "light";
   }
+};
+
+const setThemeMetaColor = (theme: UserTheme) => {
+  const color = theme === "dark" ? darkThemeColor : lightThemeColor;
+
+  document
+    .querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
+    .forEach((meta) => {
+      meta.setAttribute("content", color);
+    });
 };
