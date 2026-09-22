@@ -867,9 +867,10 @@ p.credits > span:nth-child(2n) {
 }
 
 :root.dark .breadcrumbs {
-    background: rgb(15 17 23 / 92%) !important;
     border-bottom-color: var(--borderPrimary);
+    -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
+    background: transparent !important;
 }
 
 :root.dark .breadcrumbs *,
