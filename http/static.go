@@ -44,7 +44,7 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 		"LoginPage":             auther.LoginPage(),
 		"CSS":                   false,
 		"ReCaptcha":             false,
-		"Theme":                 d.settings.Branding.Theme,
+		"Theme":                 runtimeTheme(d.settings.Branding.Theme),
 		"EnableThumbs":          d.server.EnableThumbnails,
 		"ResizePreview":         d.server.ResizePreview,
 		"EnableExec":            d.server.EnableExec,
@@ -105,6 +105,20 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 	}
 
 	return 0, nil
+}
+
+func runtimeTheme(settingsTheme string) string {
+	envTheme := strings.TrimSpace(os.Getenv("UNYCLOUD_THEME"))
+	if envTheme == "" {
+		return settingsTheme
+	}
+
+	if envTheme != "light" && envTheme != "dark" {
+		log.Printf("invalid UNYCLOUD_THEME %q: expected light or dark", envTheme)
+		return settingsTheme
+	}
+
+	return envTheme
 }
 
 func getStaticHandlers(store *storage.Storage, server *settings.Server, assetsFs fs.FS) (index, static http.Handler) {
