@@ -1165,13 +1165,6 @@ p.credits > span:nth-child(2n) {
     color: var(--textSecondary);
 }
 
-:root.dark .toast {
-    background: #181d29;
-    color: var(--textSecondary);
-    border: 1px solid var(--borderPrimary);
-    box-shadow: var(--darkShadow);
-}
-
 :root.dark #modal-background {
     background-color: rgb(0 0 0 / 72%);
     backdrop-filter: blur(3px);
