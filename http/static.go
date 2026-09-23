@@ -29,6 +29,9 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 		return http.StatusInternalServerError, err
 	}
 
+	activeTheme := runtimeTheme(d.settings.Branding.Theme)
+	themeColor, backgroundColor := runtimeThemeColors(activeTheme)
+
 	data := map[string]interface{}{
 		"Name":                  d.settings.Branding.Name,
 		"DisableExternal":       d.settings.Branding.DisableExternal,
@@ -44,7 +47,9 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 		"LoginPage":             auther.LoginPage(),
 		"CSS":                   false,
 		"ReCaptcha":             false,
-		"Theme":                 d.settings.Branding.Theme,
+		"Theme":                 activeTheme,
+		"ThemeColor":            themeColor,
+		"BackgroundColor":       backgroundColor,
 		"EnableThumbs":          d.server.EnableThumbnails,
 		"ResizePreview":         d.server.ResizePreview,
 		"EnableExec":            d.server.EnableExec,
@@ -105,6 +110,28 @@ func handleWithStaticData(w http.ResponseWriter, _ *http.Request, d *data, fSys 
 	}
 
 	return 0, nil
+}
+
+func runtimeTheme(settingsTheme string) string {
+	envTheme := strings.TrimSpace(os.Getenv("UNYCLOUD_THEME"))
+	if envTheme == "" {
+		return settingsTheme
+	}
+
+	if envTheme != "light" && envTheme != "dark" {
+		log.Printf("invalid UNYCLOUD_THEME %q: expected light or dark", envTheme)
+		return settingsTheme
+	}
+
+	return envTheme
+}
+
+func runtimeThemeColors(theme string) (themeColor, backgroundColor string) {
+	if theme == "dark" {
+		return "#151329", "#0f1117"
+	}
+
+	return "#5a52c8", "#ffffff"
 }
 
 func getStaticHandlers(store *storage.Storage, server *settings.Server, assetsFs fs.FS) (index, static http.Handler) {
@@ -337,7 +364,8 @@ func handleManifest(w http.ResponseWriter, d *data) (int, error) {
 	}
 	name = "UnyCloud"
 
-	themeColor := "#5a52c8"
+	activeTheme := runtimeTheme(d.settings.Branding.Theme)
+	themeColor, backgroundColor := runtimeThemeColors(activeTheme)
 
 	startURL := d.server.BaseURL
 	if startURL == "" {
@@ -362,7 +390,7 @@ func handleManifest(w http.ResponseWriter, d *data) (int, error) {
 		},
 		"start_url":        startURL,
 		"display":          "standalone",
-		"background_color": "#ffffff",
+		"background_color": backgroundColor,
 		"theme_color":      themeColor,
 	}
 

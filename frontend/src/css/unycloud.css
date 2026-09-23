@@ -305,7 +305,7 @@ nav .action i:hover {
 }
 
 nav > .action:first-child {
-    padding: 1rem 0.85rem 0.5rem;
+    padding: 1rem .55rem .5rem;
 }
 
 nav > .action:first-child i {
@@ -599,8 +599,9 @@ p.credits > span:nth-child(2n) {
 }
 
 #listing.list .item.header {
-    padding: 0 0.5rem 0.5rem;
     border-bottom: 1px solid var(--divider);
+    padding: .5rem 1rem;
+    border-radius: 2px;
 }
 
 #listing.list .name {
@@ -745,6 +746,518 @@ p.credits > span:nth-child(2n) {
 }
 
 /*----------------------------------------------------------------------------------
+ * DARK UNYCLOUD TEMPLATE
+ *--------------------------------------------------------------------------------*/
+
+:root.dark {
+    color-scheme: dark;
+    --brandPrimary: #817cff;
+    --brandPrimaryHover: #a5a1ff;
+    --background: #0f1117;
+    --surfacePrimary: #181b24;
+    --surfaceSecondary: #222634;
+    --divider: rgb(255 255 255 / 8%);
+    --action: #d7dbef;
+    --item-selected: #817cff;
+    --borderPrimary: rgb(255 255 255 / 8%);
+    --borderSecondary: rgb(255 255 255 / 18%);
+    --textPrimary: #9ba2bd;
+    --textSecondary: #edf0ff;
+    --hover: rgb(255 255 255 / 5%);
+    --iconPrimary: #817cff;
+    --iconTertiary: #5b627a;
+    --dividerPrimary: rgb(255 255 255 / 8%);
+    --dividerSecondary: rgb(255 255 255 / 14%);
+    --darkSurfaceElevated: #1d2230;
+    --darkSurfaceSunk: #11141c;
+    --darkLine: #2b3042;
+    --darkMuted: #79819b;
+    --darkShadow: 0 16px 42px rgb(0 0 0 / 32%);
+}
+
+:root.dark body,
+:root.dark main {
+    background:
+        radial-gradient(circle at 12% 8%, rgb(62 58 171 / 18%), transparent 28rem),
+        radial-gradient(circle at 92% 18%, rgb(129 124 255 / 10%), transparent 24rem),
+        var(--background) !important;
+    color: var(--textSecondary);
+}
+
+:root.dark header {
+    border-bottom: 1px solid rgb(255 255 255 / 8%);
+    box-shadow: 0 10px 34px rgb(0 0 0 / 36%);
+}
+
+:root.dark nav {
+    background:
+        linear-gradient(180deg, #151923 0%, #10131b 100%) !important;
+    border-right: 1px solid var(--borderPrimary);
+    box-shadow: 10px 0 30px rgb(0 0 0 / 12%);
+}
+
+:root.dark nav > div,
+:root.dark nav .credits {
+    border-color: var(--borderPrimary);
+}
+
+:root.dark nav .action {
+    color: var(--textPrimary);
+}
+
+:root.dark nav .action i,
+:root.dark nav > .action:first-child i {
+    color: #817cff !important;
+    border-color: rgb(129 124 255 / 24%);
+    background: transparent;
+    border-radius: 4px !important;
+}
+
+:root.dark nav .action:hover,
+:root.dark nav .action:hover i,
+:root.dark nav .action i:hover,
+:root.dark #logout:hover {
+    color: #ffffff !important;
+}
+
+:root.dark nav .action:hover i,
+:root.dark nav > .action:first-child:hover i {
+    background: rgb(129 124 255 / 14%);
+    color: #ffffff !important;
+}
+
+:root.dark nav #logout i {
+    color: #c80000 !important;
+}
+
+:root.dark header > .action i,
+:root.dark header > button.action i,
+:root.dark header > #more i,
+:root.dark header .theme-button i {
+    border-radius: 4px !important;
+    background: transparent !important;
+    color: #ffffff !important;
+    opacity: 0.66 !important;
+}
+
+:root.dark header > .action:hover i,
+:root.dark header > button.action:hover i,
+:root.dark header > #more:hover i,
+:root.dark header .theme-button:hover i {
+    background: rgb(255 255 255 / 7%) !important;
+    opacity: 1 !important;
+}
+
+:root.dark .credits,
+:root.dark .credits > span,
+:root.dark p.credits:hover * {
+    color: #817cff;
+}
+
+:root.dark .vue-simple-progress-bar,
+:root.dark .vue-simple-progress-bar::-webkit-progress-bar {
+    background: #2a3040 !important;
+}
+
+:root.dark .vue-simple-progress-bar::-webkit-progress-value,
+:root.dark .vue-simple-progress-bar::-moz-progress-bar {
+    background: linear-gradient(90deg, #817cff, #57d3ff) !important;
+}
+
+:root.dark .breadcrumbs {
+    border-bottom-color: var(--borderPrimary);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    background: transparent !important;
+}
+
+:root.dark .breadcrumbs *,
+:root.dark .breadcrumbs .material-icons {
+    color: #8d94ad !important;
+}
+
+:root.dark .breadcrumbs a:hover {
+    background: rgb(255 255 255 / 6%);
+    color: #ffffff !important;
+}
+
+:root.dark .button {
+    background: #f7f8ff;
+    color: #3e3aab;
+}
+
+:root.dark .button:hover {
+    background: #817cff !important;
+    color: #ffffff !important;
+}
+
+:root.dark .button--flat.button--grey {
+    background: #252a39 !important;
+    color: #d5daf0 !important;
+}
+
+:root.dark .button--flat.button--red {
+    background: #cf3e4a !important;
+    color: #ffffff !important;
+}
+
+:root.dark .card,
+:root.dark .card.floating,
+:root.dark .share__box,
+:root.dark #search .boxes,
+:root.dark #modal,
+:root.dark .prompt,
+:root.dark .dropdown-modal {
+    background: var(--surfacePrimary) !important;
+    color: var(--textSecondary) !important;
+    border: 1px solid var(--borderPrimary);
+    box-shadow: var(--darkShadow);
+}
+
+:root.dark .card h2,
+:root.dark .card h3,
+:root.dark table th,
+:root.dark label,
+:root.dark .small {
+    color: var(--textPrimary);
+}
+
+:root.dark .input,
+:root.dark input,
+:root.dark select,
+:root.dark textarea,
+:root.dark .vue-number-input > input,
+:root.dark .vue-number-input__button {
+    background: #11141c !important;
+    color: var(--textSecondary) !important;
+    border-color: var(--borderPrimary) !important;
+}
+
+:root.dark .input:hover,
+:root.dark .input:focus,
+:root.dark input:hover,
+:root.dark input:focus,
+:root.dark select:hover,
+:root.dark select:focus,
+:root.dark textarea:hover,
+:root.dark textarea:focus {
+    border-color: rgb(129 124 255 / 58%) !important;
+    box-shadow: 0 0 0 3px rgb(129 124 255 / 12%);
+}
+
+:root.dark input::placeholder,
+:root.dark textarea::placeholder {
+    color: #6f7792 !important;
+}
+
+:root.dark table tr {
+    border-bottom-color: var(--borderPrimary);
+}
+
+:root.dark table tr:hover {
+    background: rgb(255 255 255 / 3%);
+}
+
+:root.dark .dashboard #nav .wrapper {
+    border-bottom-color: var(--borderPrimary);
+}
+
+:root.dark .dashboard #nav ul {
+    color: var(--textPrimary);
+}
+
+:root.dark .dashboard #nav ul li:hover {
+    background: rgb(255 255 255 / 5%);
+}
+
+:root.dark .dashboard #nav ul li.active {
+    border-color: #817cff;
+    color: #ffffff;
+}
+
+:root.dark .dashboard #nav ul li.active::before {
+    background: #817cff;
+    opacity: 0.14;
+}
+
+:root.dark #listing .item {
+    background: var(--surfacePrimary);
+    color: var(--textPrimary);
+    border-color: var(--borderPrimary);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 28%);
+}
+
+:root.dark #listing.list .item {
+    background: linear-gradient(180deg, #1a1f2b 0%, #171b25 100%);
+}
+
+:root.dark #listing.mosaic .item {
+    background: linear-gradient(180deg, #1c2130 0%, #171b25 100%);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 22%);
+}
+
+:root.dark #listing.list .item.header {
+    background: #10131b;
+    border-bottom-color: var(--borderPrimary);
+    color: #a7aec8;
+    box-shadow: none;
+}
+
+:root.dark #listing.list .item:hover,
+:root.dark #listing.mosaic .item:hover {
+    opacity: 1;
+    background: #222838 !important;
+}
+
+:root.dark #listing.list .item:hover i::before {
+    color: inherit;
+}
+
+:root.dark #listing .item[aria-selected=true],
+:root.dark #listing .item[aria-selected=true] div i,
+:root.dark #listing .item[aria-selected=true] div i:before {
+    background: linear-gradient(135deg, #5751d9, #817cff) !important;
+    color: #ffffff !important;
+}
+
+:root.dark #listing #multiple-selection {
+    background: #1f6f5d;
+    color: #dbfff6;
+}
+
+:root.dark .message {
+    color: var(--textPrimary);
+}
+
+:root.dark .message i {
+    color: #817cff;
+}
+
+:root.dark #dropdown {
+    background: transparent !important;
+}
+
+:root.dark header #dropdown.active,
+:root.dark #dropdown.active,
+:root.dark .context-menu {
+    background: #181d29 !important;
+    border: 1px solid var(--borderPrimary) !important;
+    box-shadow: var(--darkShadow) !important;
+}
+
+:root.dark #dropdown .action span:not(.counter),
+:root.dark #dropdown button span:not(.counter),
+:root.dark header #dropdown .action span:not(.counter),
+:root.dark header #dropdown button span:not(.counter) {
+    color: #d8dcf2 !important;
+}
+
+:root.dark #dropdown button,
+:root.dark #dropdown .action,
+:root.dark .context-menu .action {
+    color: #d8dcf2 !important;
+}
+
+:root.dark #dropdown button:hover,
+:root.dark #dropdown button:focus,
+:root.dark .context-menu .action:hover {
+    background: rgb(129 124 255 / 12%) !important;
+    color: #ffffff !important;
+}
+
+:root.dark .action .counter {
+    background: #817cff;
+    color: #ffffff;
+    border-color: #181b24;
+}
+
+:root.dark #search input {
+    color: #d8dcef !important;
+    font-weight: 500;
+}
+
+:root.dark header #search {
+    max-width: 21rem;
+    opacity: 0.72;
+    transition:
+        opacity 0.12s ease,
+        max-width 0.12s ease;
+}
+
+:root.dark header #search:focus-within,
+:root.dark header #search.active {
+    opacity: 1;
+    max-width: 25rem;
+}
+
+:root.dark #search #input {
+    background: rgb(255 255 255 / 4%);
+    border: 1px solid rgb(255 255 255 / 6%);
+    box-shadow: none;
+    min-height: 1.65rem;
+    height: 1.65rem;
+    opacity: 1;
+}
+
+:root.dark header #search:focus-within #input,
+:root.dark header #search.active #input {
+    background: rgb(255 255 255 / 7%);
+    border-color: rgb(255 255 255 / 12%);
+}
+
+:root.dark #search #input > .action,
+:root.dark #search #input > i {
+    opacity: 0.62;
+}
+
+:root.dark .share__box__element,
+:root.dark .share__box__items #listing.list .item {
+    border-color: var(--borderPrimary);
+}
+
+:root.dark .share__preview-play {
+    background: var(--surfacePrimary);
+    color: #817cff;
+}
+
+:root.dark #previewer,
+:root.dark #editor-container {
+    background: #05060a;
+}
+
+:root.dark #previewer header,
+:root.dark #editor-container header {
+    background:
+        linear-gradient(90deg, #05060a 0%, #080b13 68%, #11142a 100%) !important;
+    border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+:root.dark #previewer .preview {
+    background:
+        radial-gradient(circle at 50% 25%, rgb(62 58 171 / 12%), transparent 28rem),
+        #05060a;
+}
+
+:root.dark #previewer .info {
+    background: var(--surfacePrimary);
+    color: var(--textSecondary);
+    border: 1px solid var(--borderPrimary);
+    border-radius: 4px;
+}
+
+:root.dark #editor {
+    background: #0f131d !important;
+    color: #edf0ff !important;
+    border-color: var(--borderPrimary) !important;
+}
+
+:root.dark .editor-header {
+    background: #10131b;
+    border-bottom: 1px solid var(--borderPrimary);
+}
+
+:root.dark .editor-header > div > button {
+    color: #cbd1e8;
+}
+
+:root.dark .md_preview {
+    background: var(--surfacePrimary);
+    color: var(--textSecondary);
+}
+
+:root.dark #modal-background {
+    background-color: rgb(0 0 0 / 72%);
+    backdrop-filter: blur(3px);
+}
+
+:root.dark .shell {
+    background: #10131b;
+    color: var(--textSecondary);
+    border-top: 1px solid var(--borderPrimary);
+}
+
+:root.dark .shell__content {
+    background: #0c0f16;
+    box-shadow: inset 0 1px 0 var(--borderPrimary);
+}
+
+:root.dark .shell__divider {
+    background: #2a3040;
+}
+
+:root.dark .md_preview {
+    border-color: var(--borderPrimary);
+}
+
+:root.dark #login {
+    background-color: #0f1117;
+    background-image:
+        radial-gradient(circle at 18% 16%, rgb(129 124 255 / 28%), transparent 28rem),
+        linear-gradient(145deg, rgb(18 19 36 / 96%), rgb(10 12 20 / 94%)),
+        url(/static/img/unycloud/cloud-background.png);
+}
+
+:root.dark #login form {
+    background-color: rgb(24 27 36 / 92%);
+    border-color: rgb(255 255 255 / 10%);
+    box-shadow: 0 24px 70px rgb(0 0 0 / 45%);
+}
+
+:root.dark #login .input--block {
+    background: #10131b !important;
+    color: #f3f5ff !important;
+    border-color: rgb(255 255 255 / 10%);
+}
+
+:root.dark #login h1 {
+    color: #9ca3bd;
+}
+
+:root.dark #login h1 a,
+:root.dark #login .button {
+    color: #9d99ff;
+}
+
+:root.dark #login .button {
+    border-color: rgb(129 124 255 / 80%);
+}
+
+:root.dark #login .button:hover {
+    background: #817cff;
+    color: #ffffff;
+}
+
+:root.dark .pdf,
+:root.dark iframe,
+:root.dark .csv-viewer,
+:root.dark .video-player {
+    background: #05060a;
+}
+
+:root.dark ::selection {
+    background: rgb(129 124 255 / 38%);
+    color: #ffffff;
+}
+
+:root.dark ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+:root.dark ::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+:root.dark ::-webkit-scrollbar-thumb {
+    background: #30374a;
+    border-radius: 8px;
+}
+
+:root.dark ::-webkit-scrollbar-thumb:hover {
+    background: #424a63;
+}
+
+/*----------------------------------------------------------------------------------
  *MOBILE UNYCLOUD TEMPLATE
  *--------------------------------------------------------------------------------*/
 
@@ -870,6 +1383,10 @@ header #dropdown button:focus i {
     #dropdown.active {
         transform: scale(1);
         background: white !important;
+    }
+
+    :root.dark #dropdown.active {
+        background: #181d29 !important;
     }
 
     header #dropdown.active .action i,

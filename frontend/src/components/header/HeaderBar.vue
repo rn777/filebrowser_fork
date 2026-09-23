@@ -11,6 +11,13 @@
 
     <slot />
 
+    <Action
+      class="theme-button"
+      :icon="themeIcon"
+      :label="themeLabel"
+      @action="toggleHeaderTheme"
+    />
+
     <div
       id="dropdown"
       :class="{ active: layoutStore.currentPromptName === 'more' }"
@@ -38,9 +45,10 @@
 import { useLayoutStore } from "@/stores/layout";
 
 import { logoURL } from "@/utils/constants";
+import { getTheme, toggleTheme } from "@/utils/theme";
 
 import Action from "@/components/header/Action.vue";
-import { computed, useSlots } from "vue";
+import { computed, ref, useSlots } from "vue";
 import { useI18n } from "vue-i18n";
 
 defineProps<{
@@ -54,6 +62,19 @@ const slots = useSlots();
 const { t } = useI18n();
 
 const ifActionsSlot = computed(() => (slots.actions ? true : false));
+const activeTheme = ref<UserTheme>(getTheme() || "light");
+const themeIcon = computed(() =>
+  activeTheme.value === "dark" ? "light_mode" : "dark_mode"
+);
+const themeLabel = computed(() =>
+  activeTheme.value === "dark"
+    ? `${t("settings.themes.title")}: ${t("settings.themes.light")}`
+    : `${t("settings.themes.title")}: ${t("settings.themes.dark")}`
+);
+const toggleHeaderTheme = () => {
+  toggleTheme();
+  activeTheme.value = getTheme();
+};
 </script>
 
 <style></style>
