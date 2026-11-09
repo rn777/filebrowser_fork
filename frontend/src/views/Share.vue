@@ -5,7 +5,7 @@
 
       <action
         v-if="fileStore.selectedCount"
-        icon="file_download"
+        icon="download"
         :label="t('buttons.download')"
         @action="download"
         :counter="fileStore.selectedCount"
@@ -20,7 +20,8 @@
         <i class="material-icons">content_paste</i>
       </button>
       <action
-        icon="check_circle"
+        :icon="fileStore.multiple ? 'check_circle' : 'checklist'"
+        :aria-pressed="fileStore.multiple"
         :label="t('buttons.selectMultiple')"
         @action="toggleMultipleSelection"
       />

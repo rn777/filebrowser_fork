@@ -1,6 +1,14 @@
 <template>
   <header>
-    <img v-if="showLogo" :src="logoURL" alt="UnyCloud" />
+    <router-link
+      class="header-home"
+      to="/files/"
+      :aria-label="t('sidebar.myFiles')"
+      :title="t('sidebar.myFiles')"
+      @click="layoutStore.closeHovers"
+    >
+      <img v-if="showLogo" :src="logoURL" alt="UnyCloud" />
+    </router-link>
     <Action
       v-if="showMenu"
       class="menu-button"
@@ -16,7 +24,36 @@
       :icon="themeIcon"
       :label="themeLabel"
       @action="toggleHeaderTheme"
-    />
+    >
+      <template v-if="activeTheme === 'auto'" #icon>
+        <svg
+          class="auto-theme-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <defs>
+            <clipPath :id="autoSunClipId">
+              <path
+                clip-rule="evenodd"
+                d="M0 0H24V24H0Z M24 17.75a6.25 6.25 0 1 0-12.5 0a6.25 6.25 0 1 0 12.5 0Z"
+              />
+            </clipPath>
+          </defs>
+          <!-- Original Material Icons light_mode geometry, shared with Light. -->
+          <path
+            fill="currentColor"
+            :clip-path="`url(#${autoSunClipId})`"
+            d="M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"
+          />
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="M22.75 17.75a5 5 0 1 1-10 0a5 5 0 1 1 10 0ZM17.75 14.08a3.67 3.67 0 0 0 0 7.34Z"
+          />
+        </svg>
+      </template>
+    </Action>
 
     <div
       id="dropdown"
@@ -45,10 +82,10 @@
 import { useLayoutStore } from "@/stores/layout";
 
 import { logoURL } from "@/utils/constants";
-import { getTheme, toggleTheme } from "@/utils/theme";
+import { getThemePreference, toggleTheme } from "@/utils/theme";
 
 import Action from "@/components/header/Action.vue";
-import { computed, ref, useSlots } from "vue";
+import { computed, ref, useId, useSlots } from "vue";
 import { useI18n } from "vue-i18n";
 
 defineProps<{
@@ -58,23 +95,80 @@ defineProps<{
 
 const layoutStore = useLayoutStore();
 const slots = useSlots();
+const autoSunClipId = useId();
 
 const { t } = useI18n();
 
 const ifActionsSlot = computed(() => (slots.actions ? true : false));
-const activeTheme = ref<UserTheme>(getTheme() || "light");
+const activeTheme = ref(getThemePreference() || "light");
 const themeIcon = computed(() =>
-  activeTheme.value === "dark" ? "light_mode" : "dark_mode"
+  activeTheme.value === "auto"
+    ? "brightness_4"
+    : activeTheme.value === "dark"
+      ? "dark_mode"
+      : "light_mode"
 );
 const themeLabel = computed(() =>
-  activeTheme.value === "dark"
-    ? `${t("settings.themes.title")}: ${t("settings.themes.light")}`
-    : `${t("settings.themes.title")}: ${t("settings.themes.dark")}`
+  activeTheme.value === "auto"
+    ? `${t("settings.themes.title")}: Auto (08:00 / 20:00)`
+    : activeTheme.value === "light"
+      ? `${t("settings.themes.title")}: ${t("settings.themes.light")}`
+      : `${t("settings.themes.title")}: ${t("settings.themes.dark")}`
 );
 const toggleHeaderTheme = () => {
   toggleTheme();
-  activeTheme.value = getTheme();
+  activeTheme.value = getThemePreference() || "light";
 };
 </script>
 
-<style></style>
+<style scoped>
+.header-home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4rem;
+  height: 100%;
+  border-radius: 4px;
+  transition: backdrop-filter 150ms ease;
+}
+
+.header-home:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -4px;
+}
+
+/* The logo can be supplied by private header background branding. */
+@media (hover: hover) and (pointer: fine) {
+  .header-home:hover {
+    -webkit-backdrop-filter: brightness(0.65);
+    backdrop-filter: brightness(0.65);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-home {
+    transition: none;
+  }
+}
+
+.theme-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 3rem;
+  flex-shrink: 0;
+}
+
+.auto-theme-icon {
+  display: block;
+  width: 1.33rem;
+  height: 1.33rem;
+  flex-shrink: 0;
+  opacity: 0.66;
+}
+
+.theme-button:focus-visible .auto-theme-icon {
+  opacity: 1;
+}
+</style>

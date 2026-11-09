@@ -60,21 +60,22 @@
         />
         <action
           v-if="headerButtons.download"
-          icon="file_download"
+          icon="download"
           :label="t('buttons.download')"
           @action="download"
           :counter="fileStore.selectedCount"
         />
         <action
           v-if="headerButtons.upload"
-          icon="file_upload"
+          icon="upload"
           id="upload-button"
           :label="t('buttons.upload')"
           @action="uploadFunc"
         />
         <action icon="info" :label="t('buttons.info')" show="info" />
         <action
-          icon="check_circle"
+          :icon="fileStore.multiple ? 'check_circle' : 'checklist'"
+          :aria-pressed="fileStore.multiple"
           :label="t('buttons.selectMultiple')"
           @action="toggleMultipleSelection"
         />
@@ -463,9 +464,9 @@ const modifiedIcon = computed(() => {
 
 const viewIcon = computed(() => {
   const icons = {
-    list: "view_module",
-    mosaic: "grid_view",
-    "mosaic gallery": "view_list",
+    list: "grid_view",
+    mosaic: "collections",
+    "mosaic gallery": "format_list_bulleted",
   };
   return authStore.user === null
     ? icons["list"]

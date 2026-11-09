@@ -1,8 +1,6 @@
 <template>
   <div id="login" :class="{ recaptcha: recaptcha }">
     <form
-      id="login-form"
-      name="login"
       method="post"
       :action="createMode ? '/api/signup' : '/api/login'"
       autocomplete="on"
@@ -21,18 +19,11 @@
       </h1>
       <label class="sr-only" for="username">{{ t("login.username") }}</label>
       <input
-        autofocus
         id="username"
         name="username"
         class="input input--block"
-        type="email"
+        type="text"
         autocomplete="username"
-        inputmode="text"
-        enterkeyhint="next"
-        :aria-label="t('login.username')"
-        autocapitalize="off"
-        autocorrect="off"
-        spellcheck="false"
         v-model="username"
         :placeholder="t('login.username')"
       />
