@@ -254,6 +254,21 @@ deployment-specific files committed to the repository.
 
 ## Release Notes
 
+- Watcher publication is tracked separately from the working-tree fingerprint.
+  Already-pushed commits still require a release. Only successful GitHub sync
+  records published.head; never mark publication complete after a manual push.
+  Clean commits beyond the current version tag receive a patch version bump.
+
+- Listing column headings share a 0.75rem font size. The modified heading
+  uses a span, unlike item dates in time elements; cover both structures.
+
+- File rows and mosaic items keep their selection styling without hover effects
+  in either theme. Selected icon backgrounds stay transparent; only the item
+  carries the selection background.
+
+- Dark body/main use the base background without linear gradients or lateral
+  radial light effects. Preserve the deployment branding cascade.
+
 - Sidebar icons use a fixed 1.5rem box with a 1rem glyph. Keep the light
   color #cecece and dark color #878787b0; preserve the logout color override.
 

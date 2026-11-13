@@ -604,10 +604,14 @@ p.credits > span:nth-child(2n) {
     font-size: 1.25em !important;
 }
 
-#listing .item[aria-selected=true],
+#listing .item[aria-selected=true] {
+    background: #3e3aab !important;
+    color: var(--iconSecondary) !important;
+}
+
 #listing .item[aria-selected=true] div i,
 #listing .item[aria-selected=true] div i:before {
-    background: #3e3aab !important;
+    background: transparent !important;
     color: var(--iconSecondary) !important;
 }
 
@@ -628,23 +632,26 @@ p.credits > span:nth-child(2n) {
     border-top: 0;
 }
 
-#listing .item[aria-selected=true]:hover {
-    opacity: 0.85;
-}
-
-#listing.list .item:hover {
-    opacity: 0.7;
-    background: #f5f5f5;
-}
-
-#listing.list .item:hover i::before {
-    color: grey;
-}
-
 #listing.list .item.header {
     border-bottom: 1px solid var(--divider);
     padding: .5rem 1rem;
     border-radius: 2px;
+    margin: 0 auto .5rem;
+}
+
+#listing.list .item.header .name,
+#listing.list .item.header .size,
+#listing.list .item.header .modified {
+    font-size: .75rem;
+}
+
+:root:not(.dark) #listing.list .item.header {
+    background: #f4f4f4;
+    z-index: 999;
+    border: 0;
+    border-bottom: 1px solid var(--borderPrimary);
+    padding: .85em;
+    display: flex !important;
 }
 
 #listing.list .name {
@@ -820,10 +827,6 @@ p.credits > span:nth-child(2n) {
 
 :root.dark body,
 :root.dark main {
-    background:
-        radial-gradient(circle at 12% 8%, rgb(62 58 171 / 18%), transparent 28rem),
-        radial-gradient(circle at 92% 18%, rgb(129 124 255 / 10%), transparent 24rem),
-        var(--background) !important;
     color: var(--textSecondary);
 }
 
@@ -1046,20 +1049,14 @@ p.credits > span:nth-child(2n) {
     box-shadow: none;
 }
 
-:root.dark #listing.list .item:hover,
-:root.dark #listing.mosaic .item:hover {
-    opacity: 1;
-    background: #222838 !important;
+:root.dark #listing .item[aria-selected=true] {
+    background: linear-gradient(135deg, #5751d9, #817cff) !important;
+    color: #ffffff !important;
 }
 
-:root.dark #listing.list .item:hover i::before {
-    color: inherit;
-}
-
-:root.dark #listing .item[aria-selected=true],
 :root.dark #listing .item[aria-selected=true] div i,
 :root.dark #listing .item[aria-selected=true] div i:before {
-    background: linear-gradient(135deg, #5751d9, #817cff) !important;
+    background: transparent !important;
     color: #ffffff !important;
 }
 
@@ -1103,10 +1100,10 @@ p.credits > span:nth-child(2n) {
     color: #ffffff !important;
 }
 
-:root.dark .action .counter {
-    background: #817cff;
+:root .action .counter {
+    background: #181b24;
     color: #ffffff;
-    border-color: #181b24;
+    border-color: #817cff;
 }
 
 :root.dark #search input {
