@@ -41,7 +41,7 @@ UnyCloud is a maintained, security-focused fork of File Browser.
 
 ## CVE And Dependency Hygiene
 
-- Use the pinned Go toolchain from `go.mod` (`go1.27.3` since 2026-10-27).
+- Use the pinned Go toolchain from `go.mod` (`go1.27.4` since 2026-11-14).
 - Run `govulncheck` and production `pnpm audit` before release.
 - Keep Dependabot config active for Go modules and frontend packages.
 - When updating dependencies, verify that the replacement does not weaken CSP or
@@ -49,6 +49,102 @@ UnyCloud is a maintained, security-focused fork of File Browser.
 - Do not suppress vulnerability reports without code-path analysis.
 
 ## Current Advancement
+
+### Code And System File Workflows (2026-11-14)
+
+- Code editing uses local highlight.js with Monokai, an accessible native
+  textarea and a synchronized, sanitized highlighting layer. Only span/class
+  markup is allowed. Syntax parsing is capped at 100,000 characters; larger
+  text remains editable without coloration. Do not execute previewed code.
+- Unknown formats can open in the reader. Only complete, valid UTF-8 text up
+  to 10 MiB is editable. Binary, invalid encoding and larger files have a
+  read-only hex preview of at most 4 KiB. Preserve UTF-8 BOM and CRLF on save.
+- Preview and editor use the application header and shared system-file actions.
+  Native sharing is feature-detected, limited to 32 MiB, and triggered by a
+  second explicit click after fetching the file so user activation is retained.
+  There is no promise of a particular installed editor or automatic round trip.
+- Edited files can be imported through the native file chooser and replace the
+  original only after explicit confirmation. Keep read/modify permissions,
+  reject unsaved editor changes, and retain backend PUT authorization. Download
+  remains available when the browser cannot share files. Do not invent OS
+  permission prompts or launch arbitrary local programs.
+- Verify mobile/desktop code rendering, save, binary read-only behavior, native
+  sharing via mocks, import cancellation and confirmed binary replacement.
+  Real Android/iOS/Windows share targets still require device validation.
+
+### Local PDF Preview (2026-11-14)
+
+- PDFs open at 0.5 of fit-width on desktop and mobile in continuous mode. Page placeholders are
+  lazy-rendered near the viewport with a four-canvas desktop cache target. A fast
+  reported connection permits one viewport of prefetch; slow/save-data/unknown
+  connections use visible pages only. Network hints are optional, not proof of
+  actual bandwidth. Mobile also uses continuous lazy rendering,
+  with a two-canvas cache target. Always retain all visible pages even when low
+  zoom exceeds this target; evict distant pages. Verify page jumps,
+  zoom, mixed page sizes and eviction on mobile as well as desktop.
+- Preserve page navigation, current-page tracking, cancellation, scroll anchor
+  during zoom, and serialized page cleanup in continuous mode. Do not fetch all
+  page metadata or rasterize the full document at startup.
+
+- Zoom renders into a detached canvas and swaps only the latest completed render.
+  Preserve scroll position for zoom; reset it only when changing pages. Never
+  clean up a shared PDF page while a newer render may still be using it.
+- Keep the PDF scroll gutter stable to avoid resize/render feedback loops.
+  Mobile preview uses the dynamic viewport height and a shrinkable compact title.
+
+- The authenticated file preview uses Mozilla PDF.js 6.5.438 instead of a native
+  iframe/mobile fallback. The component is lazy-loaded and renders one page at
+  a time, with page selection, fit-width zoom, rotation and password handling.
+- Worker, CMaps, standard fonts, image decoder fallbacks and license are served
+  locally with the application. No external document viewer or CDN is used.
+- Existing same-origin raw-file endpoints and their authorization remain in
+  use. Downloads on error respect the user's download permission. Source URLs
+  must match the application origin; no PDF scripting or XFA viewer is enabled.
+- Preserve the strict CSP: WebAssembly is disabled and font glyphs use PDF.js
+  path rendering. Do not add script/style exceptions for the generic viewer.
+- Canvas backing storage is limited to four million pixels and 4096 pixels per
+  dimension. Cancel pending renders and destroy loading tasks on file changes
+  or unmount. Standard resources are versioned together with the worker.
+- Verified with Chromium desktop and mobile emulation using synthetic PDFs:
+  rendered pixels, page changes, zoom, rotation, invalid document handling and
+  encrypted document/password retry. Real Android/iOS hardware is not covered.
+
+### Security Maintenance (2026-11-14)
+
+- Go toolchain pins in the module, CI, release and build/security scripts now
+  use 1.27.4. Updated direct Go modules and selected archive dependencies.
+- Frontend maintenance stays on the existing major versions. TypeScript 7,
+  VueUse 15 and Vitest 5 migrations are deliberately excluded from this pass.
+- Updated PostCSS and compatible frontend packages. The scoped minimatch
+  override upgrades affected versions 7 through 10 to 11.0.1 to address
+  GHSA-g3hv-75wg-m249 in development tooling. Full npm audit is clean after
+  installation; retain the override until upstream dependencies remove it.
+- Reviewed Markdown sanitization, HTML templates, API request destinations,
+  raw preview response isolation, toast rendering, CSSOM value constraints
+  and service-worker cache boundaries. This targeted review is not an
+  exhaustive penetration test or a real-device browser validation.
+- Added CSS value regression tests. Preserve the login form and its dedicated
+  autofill guards during dependency maintenance.
+
+### Configurable Sidebar Footer
+
+- Runtime environment variables `UNYCLOUD_DOCS_URL` and `UNYCLOUD_GIT_URL`
+  override the documentation and source links. Unset variables keep the default
+  UnyCloud destinations; explicitly empty values hide the respective link.
+- `UNYCLOUD_DOCS_LABEL` and `UNYCLOUD_GIT_LABEL` override visible labels.
+  Empty labels keep the defaults. Only absolute HTTP(S) URLs without embedded
+  credentials are accepted; invalid URLs hide the link.
+- Existing `disableExternal` branding still hides both links. If neither link
+  is visible, the footer and its divider are omitted. Restart the service after
+  changing its environment; no frontend rebuild is needed.
+- Example Docker Compose environment:
+
+  ```yaml
+  environment:
+    UNYCLOUD_DOCS_URL: "https://example.org/docs/"
+    UNYCLOUD_DOCS_LABEL: "Documentation"
+    UNYCLOUD_GIT_URL: "" # Hide the source link
+  ```
 
 ### Popup Presentation (2026-11-08)
 
@@ -98,6 +194,24 @@ UnyCloud is a maintained, security-focused fork of File Browser.
   visual or browser interaction testing.
 
 ### Confirmed Username Autofill Fix (2026-11-07)
+
+#### Server Prediction Follow-up (2026-11-14)
+
+- User-provided Chromium diagnostics identify the visible text field with
+  autocomplete=username as CREDIT_CARD_NAME_FIRST. Parsing then reports no
+  username element (renderer id 0), although saved credentials are found.
+- Chromium excludes server-predicted non-credential fields even from parsing
+  based on autocomplete. This is distinct from a focus or CSS failure.
+- Controlled mitigation: change only the input name to unycloud_username to
+  change its signature; keep id=username, the associated label, type=text,
+  autocomplete=username, Vue binding and API payload unchanged. Do not rotate
+  this name on each deployment. Keep the form without id/name.
+- User confirmed the fix after deployment of v0.30.1 (f7b342a8) on
+  2026-11-14. Separate desktop/mobile results and a post-fix diagnostic were
+  not supplied. Preserve name=unycloud_username across future releases.
+- This supersedes the input-name requirement below, not the confirmed removal
+  of the form identity. Do not restore name=username: the recorded server
+  prediction associated that signature with a credit-card field.
 
 #### Controlled Browser Trials
 

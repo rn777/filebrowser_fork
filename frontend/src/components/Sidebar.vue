@@ -3,7 +3,7 @@
   <nav :class="{ active }">
     <template v-if="isLoggedIn">
       <button @click="toAccountSettings" class="action">
-        <i class="fa-solid fa-user" aria-hidden="true"></i>
+        <i class="fa-regular fa-user nav-user-icon" aria-hidden="true"></i>
         <span>{{ user.username }}</span>
       </button>
       <button
@@ -111,6 +111,23 @@
         <a @click="help">{{ $t("sidebar.help") }}</a>
       </span>
     </p>
+    <footer v-if="!disableExternal && footerLinks.length" class="nav-footer">
+      <a
+        v-for="link in footerLinks"
+        :key="link.icon"
+        class="action"
+        :href="link.url"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i :class="link.icon" aria-hidden="true">
+          <template v-if="link.icon === 'nav-books-icon'">
+            <span></span><span></span><span></span>
+          </template>
+        </i>
+        <span>{{ link.label }}</span>
+      </a>
+    </footer>
   </nav>
 </template>
 
@@ -127,6 +144,7 @@ import {
   signup,
   hideLoginButton,
   disableExternal,
+  footerLinks,
   disableUsedPercentage,
   noAuth,
   logoutPage,
@@ -166,6 +184,7 @@ export default {
     hideLoginButton: () => hideLoginButton,
     version: () => version,
     disableExternal: () => disableExternal,
+    footerLinks: () => footerLinks,
     disableUsedPercentage: () => disableUsedPercentage,
     versionStatusClass() {
       if (this.disableExternal || this.versionCheck.error) return "";
@@ -253,6 +272,53 @@ export default {
 </script>
 
 <style scoped>
+nav .action i.nav-books-icon {
+  gap: 1px;
+}
+
+.nav-books-icon span {
+  position: relative;
+  width: 4px;
+  height: 15px;
+  background: currentColor;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.nav-books-icon span::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 1px;
+  width: 2px;
+  height: 3px;
+  background: var(--surfacePrimary);
+}
+
+.nav-books-icon span:last-child {
+  transform: rotate(-12deg);
+  transform-origin: bottom center;
+  margin-left: 2px;
+}
+
+nav .action i.nav-user-icon {
+  font-size: 0.875rem;
+}
+
+nav {
+  height: calc(100dvh - 4rem);
+}
+
+nav > * {
+  flex-shrink: 0;
+}
+
+.nav-footer {
+  margin-top: auto;
+  padding: 0.5rem 0 max(0.5rem, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--divider);
+}
+
 .credits__version {
   display: inline-flex;
   flex-direction: row;
@@ -262,7 +328,7 @@ export default {
 
 .credits__version small {
   font-size: 0.55rem;
-  font-weight: 500;
+  font-weight: normal;
   line-height: 1.1;
 }
 

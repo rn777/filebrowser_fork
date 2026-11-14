@@ -1,12 +1,13 @@
 <template>
   <div
     id="previewer"
+    :class="{ 'pdf-preview': isPdf }"
     @touchmove.prevent.stop
     @wheel.prevent.stop
     @mousemove="toggleNavigation"
     @touchstart.passive="toggleNavigation"
   >
-    <header-bar v-if="isPdf || isCsv || showNav">
+    <header-bar>
       <action icon="close" :label="$t('buttons.close')" @action="close()" />
       <title>{{ name }}</title>
       <action
@@ -17,6 +18,7 @@
       />
 
       <template #actions>
+        <SystemFileActions />
         <action
           :disabled="layoutStore.loading"
           v-if="authStore.user?.perm.rename"
@@ -26,9 +28,9 @@
         />
         <action
           :disabled="layoutStore.loading"
-          v-if="isCsv && authStore.user?.perm.modify"
+          v-if="authStore.user?.perm.download"
           icon="edit_note"
-          :label="t('buttons.editAsText')"
+          :label="t('reader.inspect')"
           @action="editAsText"
         />
         <action
@@ -95,42 +97,13 @@
           :options="videoOptions"
         >
         </VideoPlayer>
-        <iframe
-          v-else-if="isPdf && !usePdfFallback"
-          class="pdf"
+        <PdfViewer
+          v-else-if="isPdf"
           :src="previewUrl"
-          referrerpolicy="same-origin"
-        ></iframe>
-        <div v-else-if="isPdf" class="info">
-          <div class="title">
-            <i class="material-icons">picture_as_pdf</i>
-            {{ $t("files.noPreview") }}
-          </div>
-          <div>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              :href="previewUrl"
-              class="button button--flat"
-            >
-              <div>
-                <i class="material-icons">open_in_new</i
-                >{{ $t("buttons.openFile") }}
-              </div>
-            </a>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              :href="downloadUrl"
-              class="button button--flat"
-            >
-              <div>
-                <i class="material-icons">file_download</i
-                >{{ $t("buttons.download") }}
-              </div>
-            </a>
-          </div>
-        </div>
+          :download-url="downloadUrl"
+          :can-download="!!authStore.user?.perm.download"
+          @close="close"
+        />
         <div v-else-if="fileStore.req?.type == 'blob'" class="info">
           <div class="title">
             <i class="material-icons">feedback</i>
@@ -169,7 +142,7 @@
       @click="prev"
       @mouseover="hoverNav = true"
       @mouseleave="hoverNav = false"
-      :class="{ hidden: !hasPrevious || !showNav }"
+      :class="{ hidden: isPdf || !hasPrevious || !showNav }"
       :aria-label="$t('buttons.previous')"
       :title="$t('buttons.previous')"
     >
@@ -179,7 +152,7 @@
       @click="next"
       @mouseover="hoverNav = true"
       @mouseleave="hoverNav = false"
-      :class="{ hidden: !hasNext || !showNav }"
+      :class="{ hidden: isPdf || !hasNext || !showNav }"
       :aria-label="$t('buttons.next')"
       :title="$t('buttons.next')"
     >
@@ -200,13 +173,26 @@ import { resizePreview } from "@/utils/constants";
 import url from "@/utils/url";
 import { throttle } from "lodash-es";
 import HeaderBar from "@/components/header/HeaderBar.vue";
+import SystemFileActions from "@/components/files/SystemFileActions.vue";
 import Action from "@/components/header/Action.vue";
 import ExtendedImage from "@/components/files/ExtendedImage.vue";
 import VideoPlayer from "@/components/files/VideoPlayer.vue";
 import CsvViewer from "@/components/files/CsvViewer.vue";
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  defineAsyncComponent,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+
+const PdfViewer = defineAsyncComponent(
+  () => import("@/components/files/PdfViewer.vue")
+);
 
 // CSV file size limit for preview (5MB)
 // Prevents browser memory issues with large files
@@ -223,7 +209,6 @@ const showNav = ref<boolean>(true);
 const navTimeout = ref<null | number>(null);
 const hoverNav = ref<boolean>(false);
 const autoPlay = ref<boolean>(false);
-const usePdfFallback = ref<boolean>(false);
 const previousRaw = ref<string>("");
 const nextRaw = ref<string>("");
 const csvContent = ref<ArrayBuffer | string>("");
@@ -294,22 +279,13 @@ watch(route, () => {
 // Specify hooks
 onMounted(async () => {
   window.addEventListener("keydown", key);
-  window.addEventListener("resize", updatePdfFallback);
-  updatePdfFallback();
   listing.value = fileStore.oldReq?.items ?? null;
   updatePreview();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", key);
-  window.removeEventListener("resize", updatePdfFallback);
 });
-
-const updatePdfFallback = () => {
-  usePdfFallback.value =
-    window.matchMedia?.("(pointer: coarse)")?.matches ||
-    window.innerWidth <= 736;
-};
 
 // Specify methods
 const deleteFile = () => {
@@ -348,6 +324,7 @@ const next = () => {
 };
 
 const key = (event: KeyboardEvent) => {
+  if (isPdf.value && event.key !== "Escape") return;
   if (layoutStore.currentPrompt !== null) {
     return;
   }
