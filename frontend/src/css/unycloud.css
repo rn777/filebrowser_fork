@@ -23,7 +23,7 @@ nav {
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    padding: 0;
+    padding: .33rem 0 0;
     min-width: 12rem;
 }
 
@@ -76,12 +76,10 @@ nav .credits {
     position: fixed;
     inset: 0;
     background-color: #3e3aab;
-    background-image:
-        linear-gradient(rgb(90 82 200), rgb(117 82 224 / 80%)),
-        url(/static/img/unycloud/cloud-background.png);
-    background-size: cover;
+    background-image: url(/static/img/unycloud/gradient-dither.svg), linear-gradient(to bottom, #3e3aab 0%, rgb(62 58 171 / 66%) 100%), url(/static/img/unycloud/purple-mountains-sky.png);
+    background-size: 128px 128px, cover, cover;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: repeat, no-repeat, no-repeat;
     padding: 1rem;
 }
 
@@ -122,14 +120,14 @@ nav .credits {
 #login form {
     -webkit-backdrop-filter: blur(8px);
     background-color: #fff;
-    background-image: url(/static/img/unycloud/unycloud-logo-simple.png), none;
-    background-position: 50% 1.75rem;
+    background-image: url(/static/img/unycloud/unycloud-logo-wordmark.png), none;
+    background-position: 50% 2.5rem;
     background-repeat: no-repeat;
     background-size: 8rem;
     background-attachment: scroll;
     background-origin: padding-box;
     background-clip: border-box;
-    border: 1px solid #fff6;
+    border: 1.5px solid #4b1c9e;
     border-radius: 4px;
     width: 100%;
     max-width: 24rem;
@@ -140,12 +138,12 @@ nav .credits {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 24px 64px -12px rgb(30 24 75 / 32%), 0 8px 24px -6px rgb(30 24 75 / 18%);
     backdrop-filter: blur(8px);
 }
 
 #login form:hover {
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16), 0 6px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 28px 72px -12px rgb(30 24 75 / 36%), 0 10px 28px -6px rgb(30 24 75 / 20%);
 }
 
 #login img {
@@ -296,7 +294,7 @@ button .material-icons:hover {
 
 nav.active {
     left: 0;
-    padding: 0;
+    padding: .33rem 0 0;
 }
 
 nav .action {
@@ -796,7 +794,7 @@ p.credits > span:nth-child(2n) {
 #loading .spinner > div {
     width: 18px;
     height: 18px;
-    background-color: #3e3aab !important;
+    background-color: #fff !important;
     border-radius: 100%;
     display: inline-block;
     animation: sk-bouncedelay 1.4s infinite ease-in-out both;
@@ -1049,6 +1047,50 @@ p.credits > span:nth-child(2n) {
     box-shadow: 0 10px 28px rgb(0 0 0 / 22%);
 }
 
+@media (hover: hover) {
+    #listing .item[aria-selected="false"]::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: color-mix(in srgb, var(--brandPrimary) 8%, transparent);
+        opacity: 0;
+        transition: opacity .1s ease;
+    }
+
+    :root.dark #listing .item[aria-selected="false"]::before {
+        background: color-mix(in srgb, var(--brandPrimary) 18%, transparent);
+    }
+
+    #listing .item[aria-selected="false"]:hover::before {
+        opacity: 1;
+        transition-delay: .15s;
+    }
+}
+
+@keyframes listing-keyload {
+    from {
+        background-position: 150% 0;
+    }
+    to {
+        background-position: -150% 0;
+    }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    #listing .item[aria-selected="true"]:hover::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: linear-gradient(110deg, transparent 40%, rgb(255 255 255 / 16%) 50%, transparent 60%) 150% 0 / 250% 100% no-repeat;
+        animation: listing-keyload 1.2s ease-out .15s both;
+    }
+
+}
+
 :root.dark #listing.list .item.header {
     background: #10131b;
     border-bottom-color: var(--borderPrimary);
@@ -1233,16 +1275,13 @@ p.credits > span:nth-child(2n) {
 
 :root.dark #login {
     background-color: #0f1117;
-    background-image:
-        radial-gradient(circle at 18% 16%, rgb(129 124 255 / 28%), transparent 28rem),
-        linear-gradient(145deg, rgb(18 19 36 / 96%), rgb(10 12 20 / 94%)),
-        url(/static/img/unycloud/cloud-background.png);
+    background-image: url(/static/img/unycloud/gradient-dither.svg), linear-gradient(to bottom, #3e3aab 0%, rgb(62 58 171 / 66%) 100%), url(/static/img/unycloud/purple-mountains-sky.png);
 }
 
 :root.dark #login form {
-    background-color: rgb(24 27 36 / 92%);
-    border-color: rgb(255 255 255 / 10%);
-    box-shadow: 0 24px 70px rgb(0 0 0 / 45%);
+    background-color: #181b24eb;
+    border-color: #181b24eb;
+    box-shadow: 0 28px 72px -12px #0000008c, 0 8px 24px -6px #00000052;
 }
 
 :root.dark #login .input--block {

@@ -1,8 +1,6 @@
-# UnyCloud
-
-<p align="center">
-  <img src="./branding/banner.png" width="720" alt="UnyCloud"/>
-</p>
+<h1 align="center">
+  <img src="./branding/unycloud-logo-bicolor.png" width="224" alt="UnyCloud" />
+</h1>
 
 UnyCloud is a maintained fork of File Browser, derived from
 [`filebrowser/filebrowser`](https://github.com/filebrowser/filebrowser) under
@@ -11,6 +9,10 @@ Apache-2.0.
 The goal is deliberately conservative: keep the native File Browser feature set
 alive, patch it, harden it, and preserve compatibility for existing users.
 UnyCloud is not a rewrite and does not try to become a different cloud product.
+
+<p align="center">
+  <img src="./docs/static/unycloud-login.jpg" width="720" alt="UnyCloud login screen"/>
+</p>
 
 ## Project Position
 
@@ -149,17 +151,15 @@ maintenance hardening set:
 - interactive commands bounded by an internal timeout;
 - build artifact renamed to `dist/unycloud`.
 
-## UnyCloud v0.37.5
+## UnyCloud v0.40.5
 
-- ✅ Changed `.codex/CODEX.md`;
 - ✅ Changed `README.md`;
 - ✅ Changed `RELEASE_NOTES.md`;
 - ✅ Changed `UNYCLOUD_VERSION`;
 - ✅ Changed `docs/MAINTENANCE.md`;
 - ✅ Changed `docs/installation.md`;
 - ✅ Changed `frontend/package.json`;
-- ✅ Changed `frontend/src/components/files/PdfContinuous.vue`;
-- ✅ Changed `frontend/src/components/files/PdfViewer.vue`;
+- ✅ Changed `frontend/src/css/unycloud.css`;
 
 See [`docs/CSP-AUDIT.md`](docs/CSP-AUDIT.md) for the CSP contract and
 [`docs/MAINTENANCE.md`](docs/MAINTENANCE.md) for maintenance/deployment notes.
@@ -180,7 +180,7 @@ scripts/security-scan.sh
 
 The build artifact is `dist/unycloud`.
 
-Container builds are local in `v0.37.5`:
+Container builds are local in `v0.40.5`:
 
 ```sh
 scripts/build.sh

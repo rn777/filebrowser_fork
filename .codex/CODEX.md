@@ -4,6 +4,27 @@ UnyCloud is a maintained, security-focused fork of File Browser.
 
 ## Project Contract
 
+- Initial loading and the empty application shell use #3e3aab in both themes,
+  with white loading dots. Keep loaded page backgrounds independent.
+  Version the loading stylesheet URL and serve it no-store to avoid stale
+  startup colors after updates. Preserve the dark PWA manifest background.
+
+- The login card uses a soft two-layer shadow: violet-tinted in light mode,
+  neutral black in dark mode. Preserve its geometry and autofill markup.
+- The login cloud logo uses unycloud-logo-wordmark.png with the two-tone
+  UnyCloud name embedded in the image, not HTML. Preserve login field markup.
+- Login uses the local purple-mountains-sky.png background in both themes,
+  with a #3e3aab tint fading from opaque at the top to 66% at the bottom.
+  A subtle tiled monochrome dither reduces gradient banding on large displays.
+  Background-only edits must preserve form styles and
+  the validated username/password autofill markup.
+- The app manages its own translations. Both HTML entrypoints declare
+  translate="no" and google notranslate; keep dynamic lang/dir updates intact.
+  Server HTML uses Accept-Language rather than hard-coded English. Wait for
+  the initial locale messages before mounting to avoid an English flash.
+- Mobile theme-color stays #3e3aab across themes; the dark PWA launch
+  background remains #0f1117.
+
 - Repository: `trinity-labs/unycloud`.
 - Lineage: `filebrowser/filebrowser`, Apache-2.0.
 - Keep the Go module path `github.com/filebrowser/filebrowser/v2` unless a
@@ -15,6 +36,9 @@ UnyCloud is a maintained, security-focused fork of File Browser.
   document any unavoidable behavior change.
 
 ## Security Rules
+
+- Keep interest-cohort out of Permissions-Policy in both application headers
+  and reverse-proxy examples. Verify public response headers after proxy reloads.
 
 - CSP must never rely on `unsafe-inline`, `unsafe-eval`, hashes, or nonce
   workarounds.
@@ -376,15 +400,22 @@ deployment-specific files committed to the repository.
 - Listing column headings share a 0.75rem font size. The modified heading
   uses a span, unlike item dates in time elements; cover both structures.
 
-- File rows and mosaic items keep their selection styling without hover effects
-  in either theme. Selected icon backgrounds stay transparent; only the item
-  carries the selection background.
+- File rows and mosaic items have a subtle brand-tinted hover background in both
+  themes on hover-capable devices, with a 150ms entry delay and no exit delay.
+  Use a non-interactive opacity overlay to preserve gradients. Apply it only to aria-selected="false":
+  selected items retain their selection background. A single CSS keyload sheen
+  runs for 1.2s after a 150ms hover delay only for selected items, without intercepting
+  clicks or shifting layout. Disable animation with prefers-reduced-motion.
+  Exclude column headings. Selected icon backgrounds stay transparent; only the
+  item carries the selection background.
 
 - Dark body/main use the base background without linear gradients or lateral
   radial light effects. Preserve the deployment branding cascade.
 
 - Sidebar icons use a fixed 1.5rem box with a 1rem glyph. Keep the light
   color #cecece and dark color #878787b0; preserve the logout color override.
+- Sidebar padding is .33rem 0 0, including the open mobile state. Preserve
+  full-width actions and the synchronized desktop sidebar/content widths.
 
 - Keep private deployment domains, sshfs paths, tokens, keys, and local service
   files out of the project history.
