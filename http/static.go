@@ -377,7 +377,11 @@ func handleManifest(w http.ResponseWriter, d *data) (int, error) {
 	name = "UnyCloud"
 
 	activeTheme := runtimeTheme(d.settings.Branding.Theme)
-	themeColor, backgroundColor := runtimeThemeColors(activeTheme)
+	_, backgroundColor := runtimeThemeColors(activeTheme)
+	manifestThemeColor := "#5a52c8"
+	if activeTheme == "dark" {
+		manifestThemeColor = "#151329"
+	}
 
 	startURL := d.server.BaseURL
 	if startURL == "" {
@@ -403,8 +407,9 @@ func handleManifest(w http.ResponseWriter, d *data) (int, error) {
 		"start_url":        startURL,
 		"display":          "standalone",
 		"background_color": backgroundColor,
-		"theme_color":      themeColor,
+		"theme_color":      manifestThemeColor,
 	}
+	// Preserve pre-v0.40 manifest colors independently of the page status bar.
 
 	body, err := json.Marshal(manifest)
 	if err != nil {

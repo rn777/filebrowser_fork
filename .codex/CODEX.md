@@ -4,6 +4,10 @@ UnyCloud is a maintained, security-focused fork of File Browser.
 
 ## Project Contract
 
+- Keep the deployment branding image outside the transformed login form,
+  anchored inside the viewport safe area. Negative percentage offsets hide
+  the logo on laptop-height screens. Preserve login inputs when changing layout.
+
 - Initial loading and the empty application shell use #3e3aab in both themes,
   with white loading dots. Keep loaded page backgrounds independent.
   Version the loading stylesheet URL and serve it no-store to avoid stale
@@ -22,8 +26,18 @@ UnyCloud is a maintained, security-focused fork of File Browser.
   translate="no" and google notranslate; keep dynamic lang/dir updates intact.
   Server HTML uses Accept-Language rather than hard-coded English. Wait for
   the initial locale messages before mounting to avoid an English flash.
-- Mobile theme-color stays #3e3aab across themes; the dark PWA launch
-  background remains #0f1117.
+- Keep theme-color #3e3aab on every route and theme: the top status bar must
+  remain primary. Changing page theme-color to the surface was tested on the
+  user's phone and changed only the TOP bar, leaving the BOTTOM bar violet.
+  Do not repeat this as a navigation-bar fix. Android's three-button navigation
+  is native, not a CSS dock; independent transparency has not been achieved.
+  Preserve viewport-fit=cover and the dark PWA launch background #0f1117.
+  Native system-bar rendering requires device validation, not desktop emulation.
+  Restore the server manifest colors from before ba182a79 (v0.40.0): dark
+  #151329, light #5a52c8, independently of the violet page metadata.
+  The user requested this targeted rollback after manifest color omission did
+  not resolve the installed PWA report. This is not guaranteed transparency.
+  Existing WebAPKs may retain old metadata; validate on the installed device.
 
 - Repository: `trinity-labs/unycloud`.
 - Lineage: `filebrowser/filebrowser`, Apache-2.0.
@@ -98,7 +112,27 @@ UnyCloud is a maintained, security-focused fork of File Browser.
 
 ### Local PDF Preview (2026-11-14)
 
-- PDFs open at 0.5 of fit-width on desktop and mobile in continuous mode. Page placeholders are
+- Show the reactive zoom percentage between the zoom buttons in a fixed-width
+  readout, including mobile; the value is relative to fit-width.
+- Keep all nine PDF toolbar controls on one adaptive grid row, including
+  320px CSS viewports. Do not gate the grid behind a minimum-width query:
+  browser zoom and preview framing can reduce the effective viewport width.
+  Verify using an actual PDF in the app, not only an isolated toolbar fixture.
+  Reduce toolbar glyphs only below 350px (16px instead of 20px), retaining
+  40px-high buttons. Grid button tracks must shrink without fixed minima.
+  The preview header must not reserve space or an invisible home link for a
+  hidden branding logo. Balance the mobile title between Close and theme/menu.
+  Run scripts/pdf-header.browser-test.cjs with playwright-core, PDF_TEST_URL
+  pointing to a local test PDF, and optional BRANDING_CSS to check the real
+  deployment cascade. Cover 320-1024px, both themes, 16/20/24px root fonts,
+  live resizing, zoom, rotation and menu interaction before publishing.
+  Also check the listing header after closing the PDF: the desktop search
+  field must shrink at the mobile breakpoint instead of pushing actions off
+  screen. Header transitions must not animate width or margins on resize.
+
+- PDFs open at fit-width (100%) on mobile (width <=736px or coarse pointer),
+  and 75% on desktop. Apply this only on document load, not on resize, so user
+  zoom is preserved. Page placeholders are
   lazy-rendered near the viewport with a four-canvas desktop cache target. A fast
   reported connection permits one viewport of prefetch; slow/save-data/unknown
   connections use visible pages only. Network hints are optional, not proof of

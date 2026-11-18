@@ -45,6 +45,9 @@
       >
         <i class="material-icons" aria-hidden="true">zoom_out</i>
       </button>
+      <output class="pdf-zoom-value" aria-live="polite" aria-atomic="true">
+        {{ Math.round(zoom * 100) }}%
+      </output>
       <button
         type="button"
         :disabled="!documentReady || zoom >= 3"
@@ -149,7 +152,7 @@ import type {
 import workerURL from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 import { staticURL } from "@/utils/constants";
 import { cssPx, getDynamicClass, upsertRule } from "@/utils/cspStyle";
-import { pdfCanvasSize } from "@/utils/pdf";
+import { pdfCanvasSize, pdfInitialZoom } from "@/utils/pdf";
 
 const props = defineProps<{
   src: string;
@@ -168,7 +171,12 @@ const scroller = ref<HTMLElement>();
 const canvasHost = ref<HTMLElement>();
 const pageNumber = ref(1);
 const pageCount = ref(0);
-const zoom = ref(1);
+const initialZoom = () =>
+  pdfInitialZoom(
+    window.innerWidth,
+    window.matchMedia("(pointer: coarse)").matches
+  );
+const zoom = ref(initialZoom());
 const rotation = ref(0);
 const documentReady = ref(false);
 const busy = ref(true);
@@ -292,7 +300,7 @@ async function loadDocument() {
   pageCount.value = 0;
   pageNumber.value = 1;
   continuous.value = true;
-  zoom.value = 0.5;
+  zoom.value = initialZoom();
   rotation.value = 0;
   error.value = false;
   busy.value = true;
@@ -389,8 +397,14 @@ onBeforeUnmount(() => {
   color: var(--textPrimary);
 }
 .pdf-toolbar {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 40px) 40px 40px repeat(
+      2,
+      minmax(0, 40px)
+    ) 44px repeat(3, minmax(0, 40px));
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   align-items: center;
   justify-content: center;
   gap: 2px;
@@ -400,7 +414,9 @@ onBeforeUnmount(() => {
   border-bottom: 1px solid var(--divider);
 }
 .pdf-toolbar button {
-  width: 36px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
   height: 40px;
   padding: 0;
   display: inline-flex;
@@ -426,9 +442,12 @@ onBeforeUnmount(() => {
 }
 .pdf-toolbar i {
   font-size: 20px;
+  flex: 0 0 auto;
 }
 .pdf-page-input {
-  width: 48px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
   height: 32px;
   padding: 2px;
   text-align: center;
@@ -441,6 +460,32 @@ onBeforeUnmount(() => {
 .pdf-page-total {
   font-size: 0.875rem;
   min-width: 32px;
+}
+.pdf-zoom-value {
+  flex: 0 0 4ch;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.pdf-page-total,
+.pdf-zoom-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+@media (max-width: 349px) {
+  .pdf-toolbar {
+    grid-template-columns: minmax(0, 36px) 36px 36px repeat(
+        2,
+        minmax(0, 36px)
+      ) 40px repeat(3, minmax(0, 36px));
+  }
+  .pdf-toolbar i {
+    font-size: 16px;
+  }
 }
 .pdf-scroll {
   position: relative;

@@ -62,6 +62,7 @@ describe("scheduled theme", () => {
       removeEventListener: vi.fn(),
     });
     setTheme("light", true);
+    expect(meta.setAttribute).toHaveBeenLastCalledWith("content", "#3e3aab");
     toggleTheme();
     expect(getThemePreference()).toBe("dark");
     toggleTheme();
@@ -71,9 +72,10 @@ describe("scheduled theme", () => {
     const stop = startThemeSchedule();
     vi.advanceTimersByTime(1000);
     expect(html.className).toBe("dark");
-    expect(meta.setAttribute).toHaveBeenLastCalledWith("content", "#151329");
+    expect(meta.setAttribute).toHaveBeenLastCalledWith("content", "#3e3aab");
     toggleTheme();
     expect(html.className).toBe("light");
+    expect(meta.setAttribute).toHaveBeenLastCalledWith("content", "#3e3aab");
     vi.advanceTimersByTime(1000);
     expect(html.className).toBe("light");
     stop();
