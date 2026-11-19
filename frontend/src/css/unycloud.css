@@ -459,11 +459,11 @@ p.credits > span:nth-child(2n) {
 }
 
 .vue-simple-progress-bar::-webkit-progress-value {
-    background: #3e3aab !important;
+    background: linear-gradient(90deg, #817cff, #57d3ff) !important;
 }
 
 .vue-simple-progress-bar::-moz-progress-bar {
-    background: #3e3aab !important;
+    background: linear-gradient(90deg, #817cff, #57d3ff) !important;
 }
 
 .card-action {
@@ -674,12 +674,12 @@ p.credits > span:nth-child(2n) {
 }
 
 :root:not(.dark) #listing.list .item.header {
-    background: #f4f4f4;
     z-index: 999;
+    background: #f4f4f4;
     border: 0;
-    border-bottom: 1px solid var(--borderPrimary);
     padding: .85em;
     display: flex !important;
+    border-radius: 4px;
 }
 
 #listing.list .name {
@@ -881,6 +881,14 @@ p.credits > span:nth-child(2n) {
     transition: background-color 0.15s, color 0.15s;
 }
 
+:root.dark .action i {
+    color: #817cff;
+    border-radius: 50%;
+    padding: .4em;
+    font-size: 1.33rem;
+    transition: all .1s ease-in-out;
+}
+
 :root.dark nav .action i,
 :root.dark nav > .action:first-child i {
     color: #878787b0 !important;
@@ -925,7 +933,7 @@ p.credits > span:nth-child(2n) {
 :root.dark .credits,
 :root.dark .credits > span,
 :root.dark p.credits:hover * {
-    color: #817cff;
+    color: #545454;
 }
 
 :root.dark .vue-simple-progress-bar,
